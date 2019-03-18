@@ -35,11 +35,11 @@ public class MovieService {
         repository.insertOrUpdate(movie);
     }
 
-    public void remove (Integer id){
+    public void remove(Integer id) {
         repository.remove(id);
     }
 
-    public List<Movie> getAll(){
+    public List<Movie> getAll() {
         return repository.getAll();
     }
 }

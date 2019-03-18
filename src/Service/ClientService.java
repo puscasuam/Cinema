@@ -15,8 +15,10 @@ public class ClientService {
     public void addOrUpdate(int id, String CNP, int fidelityPoints, String lastName, String firstName, String dateOfBirth, String dateOfRegistration) {
 
         //we will make sure that the CNP is not already used
+
         for (Client i : repository.getAll()) {
-            if (i.getCNP() == CNP) {
+
+            if (i.getCNP().equals(CNP)) {
                 throw new RuntimeException("The CNP is already used!");
             }
         }
@@ -26,34 +28,34 @@ public class ClientService {
             // keep unchanged fields as they were
             if (fidelityPoints == 0) {
                 fidelityPoints = existing.getFidelityPoints();
-
-                if (lastName.isEmpty()) {
-                    lastName = existing.getLastName();
-                }
-                if (firstName.isEmpty()) {
-                    firstName = existing.getFirstName();
-                }
-                if (CNP.isEmpty()) {
-                    CNP = existing.getCNP();
-                }
-                if (dateOfBirth.isEmpty()) {
-                    dateOfBirth = existing.getDateOfBirth();
-                }
-                if (dateOfRegistration.isEmpty()) {
-                    dateOfRegistration = existing.getDateOfRegistration();
-                }
             }
-            Client client = new Client(id, CNP, fidelityPoints, lastName, firstName, dateOfBirth, dateOfRegistration);
-            repository.insertOrUpdate(client);
+            if (lastName.isEmpty()) {
+                lastName = existing.getLastName();
+            }
+            if (firstName.isEmpty()) {
+                firstName = existing.getFirstName();
+            }
+            if (CNP.isEmpty()) {
+                CNP = existing.getCNP();
+            }
+            if (dateOfBirth.isEmpty()) {
+                dateOfBirth = existing.getDateOfBirth();
+            }
+            if (dateOfRegistration.isEmpty()) {
+                dateOfRegistration = existing.getDateOfRegistration();
+            }
         }
+        Client client = new Client(id, CNP, fidelityPoints, lastName, firstName, dateOfBirth, dateOfRegistration);
+        repository.insertOrUpdate(client);
     }
-        public void remove ( int id){
-            repository.remove(id);
-        }
 
-        public List<Client> getAll () {
-            return repository.getAll();
-        }
+    public void remove(int id) {
+        repository.remove(id);
+    }
+
+    public List<Client> getAll() {
+        return repository.getAll();
+    }
 
 
 }

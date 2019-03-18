@@ -24,6 +24,7 @@ public class ReservationRepository {
 
     /**
      * Adds or updates a reservation if it already exists.
+     *
      * @param reservation the transaction to add or update.
      */
     public void insertOrUpdate(Reservation reservation) {
@@ -33,12 +34,13 @@ public class ReservationRepository {
 
     /**
      * Removes a reservation with a given id.
+     *
      * @param id the id.
      * @throws RuntimeException if there is no reservation with the given id.
      */
-    public void remove(String id) {
+    public void remove(Integer id) {
         if (!storage.containsKey(id)) {
-            throw new RuntimeException("There is no transaction with the given id to remove.");
+            throw new RuntimeException("There is no reservation with the given id to remove.");
         }
 
         storage.remove(id);

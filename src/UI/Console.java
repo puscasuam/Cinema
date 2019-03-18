@@ -60,8 +60,7 @@ public class Console {
             System.out.println("1. Add or update a reservation");
             System.out.println("2. Remove a reservation");
             System.out.println("3. View all reservation");
-            System.out.println("4. View all fidelity points for a given card");
-            System.out.println("5. Back");
+            System.out.println("4. Back");
 
             String option = scanner.nextLine();
             switch (option) {
@@ -92,10 +91,10 @@ public class Console {
     private void handleRemoveReservation() {
         try {
             System.out.print("Enter the id to remove:");
-            String id = scanner.nextLine();
+            int id = Integer.parseInt(scanner.nextLine());
             reservationService.remove(id);
 
-            System.out.println("Transaction removed!");
+            System.out.println("Reservation removed!");
         } catch (Exception ex) {
             System.out.println("Errors:\n" + ex.getMessage());
         }
@@ -107,15 +106,17 @@ public class Console {
             int id = scanner.nextInt();
             System.out.print("Enter movie id (0 to not change for update): ");
             int movieId = scanner.nextInt();
-            System.out.print("Enter client card (empty to not change for update): ");
+            System.out.print("Enter client card (-1 for unknown client card and 0 to not change for update): ");
             int idClient = scanner.nextInt();
             System.out.print("Enter date (empty to not change for update): ");
+            scanner.nextLine();
             String date = scanner.nextLine();
             System.out.print("Enter time (empty to not change for update): ");
             String time = scanner.nextLine();
 
-            Reservation reservation = reservationService.addOrUpdate(id, movieId, idClient, date, time);
-            System.out.println(String.format("Added reservation id=%d, clientID=%d, fidelity points=%d", reservation.getId(), reservation.getIdClient(), reservation.getClientFidelityPoints()));
+            reservationService.addOrUpdate(id, movieId, idClient, date, time);
+
+            System.out.println("Reservation added!");
         } catch (Exception ex) {
             System.out.println("Errors:\n" + ex.getMessage());
         }
@@ -169,11 +170,11 @@ public class Console {
     private void handleAddUpdateClient() {
         try {
             System.out.print("Enter id: ");
-            int id = scanner.nextInt();
+            int id = Integer.parseInt(scanner.nextLine());
             System.out.print("Enter CNP (empty to not change for update): ");
             String CNP = scanner.nextLine();
             System.out.print("Enter fidelity points : ");
-            int fidelityPoints = scanner.nextInt();
+            int fidelityPoints = Integer.parseInt(scanner.nextLine());
             System.out.print("Enter last name (empty to not change for update): ");
             String lastName = scanner.nextLine();
             System.out.print("Enter first name (empty to not change for update): ");
@@ -227,7 +228,8 @@ public class Console {
     private void handleRemoveMovie() {
         try {
             System.out.print("Enter the id to remove:");
-            int id = scanner.nextInt();
+            int id = Integer.parseInt(scanner.nextLine());
+            movieService.remove(id);
             System.out.println("Movie removed!");
         } catch (Exception ex) {
             System.out.println("Errors:\n" + ex.getMessage());

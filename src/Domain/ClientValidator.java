@@ -27,16 +27,22 @@ public class ClientValidator {
         try {
             format.parse(client.getDateOfRegistration());
         } catch (ParseException pe) {
-            throw new RuntimeException("The release date is not in a correct format!");
+            throw new RuntimeException("The registration date is not in a correct format!");
         }
 
         if (client.getCNP().length() != 13) {
-            throw new RuntimeException("The license plate must have 13 characters!");
+            throw new RuntimeException("The CNP must have 13 characters!");
         }
 
         if (client.getCNP().charAt(0) < '1' || client.getCNP().charAt(0) > '8') {
             throw new RuntimeException("CNP not valid!");
         }
+
+        if (client.getFidelityPoints() < 0) {
+            throw new RuntimeException("Fidelity points must be minimum 0");
+        }
+
+
     }
 
 }

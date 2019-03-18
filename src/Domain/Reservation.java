@@ -1,17 +1,16 @@
 package Domain;
 
 public class Reservation {
-    private int id, movieId, idClient, clientFidelityPoints;
+    private int id, movieId, idClient;
     private String date, time;
-    private final Double rateDiscount = 0.1;
 
-    public Reservation(int id, int movieId, int idClient, String date, String time, int clientFidelityPoints) {
+
+    public Reservation(int id, int movieId, int idClient, String date, String time) {
         this.id = id;
         this.movieId = movieId;
         this.idClient = idClient;
         this.date = date;
         this.time = time;
-        this.clientFidelityPoints = clientFidelityPoints;
     }
 
     @Override
@@ -22,16 +21,7 @@ public class Reservation {
                 ", idClient=" + idClient +
                 ", date='" + date + '\'' +
                 ", time='" + time + '\'' +
-                ", discount=" + rateDiscount +
                 '}';
-    }
-
-    public int getClientFidelityPoints() {
-        return clientFidelityPoints;
-    }
-
-    public void setClientFidelityPoints(int clientFidelityPoints) {
-        this.clientFidelityPoints = clientFidelityPoints;
     }
 
     public int getId() {
@@ -74,7 +64,4 @@ public class Reservation {
         this.time = time;
     }
 
-    public Double getRateDiscount() {
-        return rateDiscount;
-    }
 }

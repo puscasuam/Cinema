@@ -20,17 +20,47 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
+    /**
+     * Add a new reservation or update an existing one
+     * Update de number of fidelitypoints if the movie or the client is update
+     *
+     * @param id
+     * @param movieId
+     * @param idClient
+     * @param date
+     * @param time
+     * @return
+     */
     public Reservation addOrUpdate(int id, int movieId, int idClient, String date, String time) {
 
         Reservation existingReservation = reservationRepository.findById(id);
+
         if (existingReservation != null) {
+
+            Client oldExistingClient = clientRepository.findById(existingReservation.getIdClient());
+            Movie oldExistingMovie = movieRepository.findById(existingReservation.getMovieId());
+            boolean needsUpdate = true;
+
             // keep unchanged fields as they were
             if (movieId == 0) {
                 movieId = existingReservation.getMovieId();
+            } else {
+                needsUpdate = false;
+                if (oldExistingClient != null) {
+                    oldExistingClient.setFidelityPoints(oldExistingClient.getFidelityPoints() - oldExistingMovie.getPoints());
+                }
             }
+
             if (idClient == 0) {
                 idClient = existingReservation.getIdClient();
+            } else {
+                if (needsUpdate == true) {
+                    if (oldExistingClient != null) {
+                        oldExistingClient.setFidelityPoints(oldExistingClient.getFidelityPoints() - oldExistingMovie.getPoints());
+                    }
+                }
             }
+
             if (date.isEmpty()) {
                 date = existingReservation.getDate();
             }
@@ -48,30 +78,44 @@ public class ReservationService {
             throw new RuntimeException("The movie is not on cinema");
         }
 
-
-        int clientFidelityPoints = 0;
-
         Client existingClient = clientRepository.findById(idClient);
-        if(existingClient != null){
-            Double discount = existingMovie.getPrice()*existingReservation.getRateDiscount();
-            existingClient.setFidelityPoints(existingClient.getFidelityPoints() + discount.intValue());
-            clientFidelityPoints = existingClient.getFidelityPoints();
+        if (existingClient != null) {
+            existingClient.setFidelityPoints(existingClient.getFidelityPoints() + existingMovie.getPoints());
         }
 
-        Reservation reservation = new Reservation(id, movieId, idClient, date, time, clientFidelityPoints);
+        Reservation reservation = new Reservation(id, movieId, idClient, date, time);
         reservationRepository.insertOrUpdate(reservation);
 
         return reservation;
     }
 
-    public void remove(String id) {
+
+    /**
+     * remove a reservation by id reservation
+     * update the number of fidelity points
+     *
+     * @param id to be removed
+     */
+    public void remove(Integer id) {
+        Reservation existingReservation = reservationRepository.findById(id);
+
+        if (existingReservation != null) {
+            if (existingReservation.getIdClient() != 0) {
+                Client existingClient = clientRepository.findById(existingReservation.getIdClient());
+                Movie existingMovie = movieRepository.findById(existingReservation.getMovieId());
+
+                if (existingClient != null) {
+                    existingClient.setFidelityPoints(existingClient.getFidelityPoints() - existingMovie.getPoints());
+                }
+            }
+        }
+
         reservationRepository.remove(id);
     }
 
     public List<Reservation> getAll() {
         return reservationRepository.getAll();
     }
-
 
 }
 

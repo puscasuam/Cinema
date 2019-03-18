@@ -9,16 +9,16 @@ public class ReservationValidator {
             throw new RuntimeException("This is an invalid id number");
         }
 
-        SimpleDateFormat format = new SimpleDateFormat("dd.mm.yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.mm.yyyy");
         try {
-            format.parse(reservation.getDate());
+            dateFormat.parse(reservation.getDate());
         } catch (ParseException pe) {
             throw new RuntimeException("The date is not in a correct format!");
         }
 
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         try {
-            format.parse(reservation.getDate());
+            timeFormat.parse(reservation.getTime());
         } catch (ParseException pe) {
             throw new RuntimeException("The time is not in a correct format!");
         }

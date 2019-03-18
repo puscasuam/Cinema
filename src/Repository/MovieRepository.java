@@ -56,7 +56,7 @@ public class MovieRepository {
      * @return a movie list
      */
     public List<Movie> getAll() {
-        return new ArrayList <>(storage.values());
+        return new ArrayList<>(storage.values());
     }
 
 

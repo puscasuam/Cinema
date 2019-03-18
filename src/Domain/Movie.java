@@ -5,6 +5,7 @@ public class Movie {
     private String title, releaseDate;
     private Double price;
     private Boolean onCinema;
+    private Integer points;
 
     public Movie(Integer id, String title, String releaseDate, Double price, Boolean onCinema) {
         this.id = id;
@@ -12,6 +13,7 @@ public class Movie {
         this.releaseDate = releaseDate;
         this.price = price;
         this.onCinema = onCinema;
+        this.points = (int) (price * 0.1);
     }
 
     @Override
@@ -63,6 +65,10 @@ public class Movie {
 
     public void setOnCinema(boolean onCinema) {
         this.onCinema = onCinema;
+    }
+
+    public Integer getPoints() {
+        return points;
     }
 }
 
