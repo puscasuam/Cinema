@@ -1,20 +1,19 @@
 package Service;
 
+import CustomException.NonExistingEntityException;
 import Domain.Client;
 import Domain.Movie;
 import Domain.Reservation;
-import Repository.ClientRepository;
-import Repository.MovieRepository;
-import Repository.ReservationRepository;
+import Repository.IRepository;
 
 import java.util.List;
 
-public class ReservationService {
-    private MovieRepository movieRepository;
-    private ClientRepository clientRepository;
-    private ReservationRepository reservationRepository;
+public class ReservationService extends IsSearchable<Reservation> {
+    private IRepository<Movie> movieRepository;
+    private IRepository<Client> clientRepository;
+    private IRepository<Reservation> reservationRepository;
 
-    public ReservationService(MovieRepository movieRepository, ClientRepository clientRepository, ReservationRepository reservationRepository) {
+    public ReservationService(IRepository<Movie> movieRepository, IRepository<Client> clientRepository, IRepository<Reservation> reservationRepository) {
         this.movieRepository = movieRepository;
         this.clientRepository = clientRepository;
         this.reservationRepository = reservationRepository;
@@ -31,7 +30,7 @@ public class ReservationService {
      * @param time
      * @return
      */
-    public Reservation addOrUpdate(int id, int movieId, int idClient, String date, String time) {
+    public Reservation addOrUpdate(int id, int movieId, int idClient, String date, String time) throws NonExistingEntityException {
 
         Reservation existingReservation = reservationRepository.findById(id);
 
@@ -71,11 +70,11 @@ public class ReservationService {
 
         Movie existingMovie = movieRepository.findById(movieId);
         if (existingMovie == null) {
-            throw new RuntimeException("There is no movie with the given id!");
+            throw new NonExistingEntityException("There is no movie with the given id!");
         }
 
         if (existingMovie.isOnCinema() == false) {
-            throw new RuntimeException("The movie is not on cinema");
+            throw new NonExistingEntityException("The movie is not on cinema");
         }
 
         Client existingClient = clientRepository.findById(idClient);
@@ -116,7 +115,6 @@ public class ReservationService {
     public List<Reservation> getAll() {
         return reservationRepository.getAll();
     }
-
 }
 
 

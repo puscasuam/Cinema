@@ -1,10 +1,12 @@
 package Domain;
 
+import CustomException.DataFormatException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-public class ClientValidator {
-    public void validate(Client client) {
+public class ClientValidator implements IValidator<Client> {
+    public void validate(Client client) throws DataFormatException {
         if (client.getId() <= 0) {
             throw new RuntimeException("This is an invalid id number");
         }
@@ -21,13 +23,13 @@ public class ClientValidator {
         try {
             format.parse(client.getDateOfBirth());
         } catch (ParseException pe) {
-            throw new RuntimeException("The release date is not in a correct format!");
+            throw new DataFormatException("The release date is not in a correct format!");
         }
 
         try {
             format.parse(client.getDateOfRegistration());
         } catch (ParseException pe) {
-            throw new RuntimeException("The registration date is not in a correct format!");
+            throw new DataFormatException("The registration date is not in a correct format!");
         }
 
         if (client.getCNP().length() != 13) {

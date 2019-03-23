@@ -30,13 +30,13 @@ public class NewConsole {
         System.out.println("remove movie,id");
         System.out.println("showall movies");
         System.out.println();
-        System.out.println("add/update client,id,CNP,fidelity points,last name,first name,date of birth,date of registration");
+        System.out.println("add/update client,id,CNP,fidelity points,last name,first name,date of birth (dd:mm:yy),date of registration (dd:mm:yy)");
         System.out.println("remove client,id");
         System.out.println("showall clients");
         System.out.println();
         System.out.println("add/update reservation,id,movie id,id client,date(dd.mm.yy),time(hh:mm)");
         System.out.println("remove reservation,id");
-        System.out.println("showall reservation");
+        System.out.println("showall reservations");
         System.out.println();
         System.out.println("x. Exit");
     }
@@ -103,7 +103,6 @@ public class NewConsole {
 
         }
     }
-
 
     private void handleViewReservations(String[] entry) {
         if (entry.length == 1) {

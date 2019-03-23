@@ -1,14 +1,15 @@
 package Service;
 
 import Domain.Movie;
-import Repository.MovieRepository;
+import Repository.IRepository;
+
 
 import java.util.List;
 
-public class MovieService {
-    MovieRepository repository;
+public class MovieService extends IsSearchable<Movie>{
+    private IRepository<Movie> repository;
 
-    public MovieService(MovieRepository repository) {
+    public MovieService(IRepository<Movie> repository) {
         this.repository = repository;
     }
 
@@ -42,4 +43,9 @@ public class MovieService {
     public List<Movie> getAll() {
         return repository.getAll();
     }
+
+    public List<Integer> textSearch(String[] words) {
+        return super.fullTextSearch(words, repository.getAll());
+    }
+
 }

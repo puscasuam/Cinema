@@ -1,11 +1,13 @@
 package Domain;
 
+import CustomException.DataFormatException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-public class MovieValidator {
+public class MovieValidator implements IValidator<Movie> {
 
-    public void validate(Movie movie) {
+    public void validate(Movie movie) throws DataFormatException {
         if (movie.getId() <= 0) {
             throw new RuntimeException("This is an invalid id number");
         }
@@ -18,7 +20,7 @@ public class MovieValidator {
         try {
             format.parse(movie.getReleaseDate());
         } catch (ParseException pe) {
-            throw new RuntimeException("The release date is not in a correct format!");
+            throw new DataFormatException("The release date is not in a correct format!");
         }
 
         if (movie.getPrice() <= 0) {

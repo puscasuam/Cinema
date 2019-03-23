@@ -1,25 +1,26 @@
 package Service;
 
+import CustomException.DuplicateCNPException;
 import Domain.Client;
-import Repository.ClientRepository;
+import Repository.IRepository;
 
 import java.util.List;
 
-public class ClientService {
-    private ClientRepository repository;
+public class ClientService extends IsSearchable<Client> {
+    private IRepository<Client> repository;
 
-    public ClientService(ClientRepository repository) {
+    public ClientService(IRepository<Client> repository) {
         this.repository = repository;
     }
 
-    public void addOrUpdate(int id, String CNP, int fidelityPoints, String lastName, String firstName, String dateOfBirth, String dateOfRegistration) {
+    public void addOrUpdate(int id, String CNP, int fidelityPoints, String lastName, String firstName, String dateOfBirth, String dateOfRegistration) throws DuplicateCNPException {
 
         //we will make sure that the CNP is not already used
 
         for (Client i : repository.getAll()) {
 
             if (i.getCNP().equals(CNP)) {
-                throw new RuntimeException("The CNP is already used!");
+                throw new DuplicateCNPException("The CNP is already used!");
             }
         }
 
@@ -57,5 +58,8 @@ public class ClientService {
         return repository.getAll();
     }
 
+    public List<Integer> textSearch(String[] words) {
+        return super.fullTextSearch(words, repository.getAll());
+    }
 
 }

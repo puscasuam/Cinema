@@ -7,6 +7,8 @@ import Service.ClientService;
 import Service.MovieService;
 import Service.ReservationService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Console {
@@ -28,6 +30,7 @@ public class Console {
         System.out.println("1. Movie CRUD");
         System.out.println("2. Client CRUD");
         System.out.println("3. Reservation CRUD");
+        System.out.println("4. Search in movie/client fields");
         System.out.println("x. Exit");
     }
 
@@ -45,6 +48,9 @@ public class Console {
                     break;
                 case "3":
                     runReservationCrud();
+                    break;
+                case "4":
+                    runSearchFullText();
                     break;
                 case "x":
                     return;
@@ -96,7 +102,7 @@ public class Console {
 
             System.out.println("Reservation removed!");
         } catch (Exception ex) {
-            System.out.println("Errors:\n" + ex.getMessage());
+            System.out.println("Errors:\n" + '[' +ex.getClass()+ ']' + ex.getMessage());
         }
     }
 
@@ -118,7 +124,7 @@ public class Console {
 
             System.out.println("Reservation added!");
         } catch (Exception ex) {
-            System.out.println("Errors:\n" + ex.getMessage());
+            System.out.println("Errors:\n"+ '[' +ex.getClass()+ ']'  + ex.getMessage());
         }
     }
 
@@ -163,7 +169,7 @@ public class Console {
 
             System.out.println("Client removed!");
         } catch (Exception ex) {
-            System.out.println("Errors:\n" + ex.getMessage());
+            System.out.println("Errors:\n" + '[' +ex.getClass()+ ']' + ex.getMessage());
         }
     }
 
@@ -188,7 +194,7 @@ public class Console {
 
             System.out.println("Client added!");
         } catch (Exception ex) {
-            System.out.println("Errors:\n" + ex.getMessage());
+            System.out.println("Errors:\n" + '[' +ex.getClass()+ ']' + ex.getMessage());
         }
     }
 
@@ -232,7 +238,7 @@ public class Console {
             movieService.remove(id);
             System.out.println("Movie removed!");
         } catch (Exception ex) {
-            System.out.println("Errors:\n" + ex.getMessage());
+            System.out.println("Errors:\n" + '[' +ex.getClass()+ ']' + ex.getMessage());
         }
     }
 
@@ -254,7 +260,43 @@ public class Console {
 
             System.out.println("Movie added!");
         } catch (Exception ex) {
-            System.out.println("Errors:\n" + ex.getMessage());
+            System.out.println("Errors:\n" + '[' +ex.getClass()+ ']'  + ex.getMessage());
+        }
+    }
+
+    private void runSearchFullText() {
+        System.out.println("Enter search words:");
+        String[] words = scanner.nextLine().split("\\s");
+
+        List<Integer> searchInClients = new ArrayList<>();
+        List<Integer> searchInMovies = new ArrayList<>();
+
+        searchInClients = clientService.textSearch(words);
+        searchInMovies = movieService.textSearch(words);
+
+        if (!searchInClients.isEmpty()) {
+            System.out.println();
+            System.out.println("Searching results in clients fields: ");
+            for (Integer searchId : searchInClients) {
+                for (Client client : clientService.getAll()) {
+                    if (searchId == client.getId()) {
+                        System.out.println(client);
+                    }
+                }
+            }
+        }
+
+
+        if (!searchInMovies.isEmpty()) {
+            System.out.println();
+            System.out.println("Searching results in movie fields: ");
+            for (Integer searchId : searchInMovies) {
+                for (Movie movie : movieService.getAll()) {
+                    if (searchId == movie.getId()) {
+                        System.out.println(movie);
+                    }
+                }
+            }
         }
     }
 }

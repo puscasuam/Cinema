@@ -1,11 +1,13 @@
 package Domain;
 
-public class Client {
-    private int id, fidelityPoints;
+import java.util.ArrayList;
+
+public class Client extends Entity {
+    private int fidelityPoints;
     private String lastName, firstName, CNP, dateOfBirth, dateOfRegistration;
 
     public Client(int id, String CNP, int fidelityPoints, String lastName, String firstName, String dateOfBirth, String dateOfRegistration) {
-        this.id = id;
+        super(id);
         this.CNP = CNP;
         this.fidelityPoints = fidelityPoints;
         this.lastName = lastName;
@@ -17,7 +19,7 @@ public class Client {
     @Override
     public String toString() {
         return "Client{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", CNP=" + CNP +
                 ", fidelityPoints=" + fidelityPoints +
                 ", lastName='" + lastName + '\'' +
@@ -27,13 +29,18 @@ public class Client {
                 '}';
     }
 
-    public int getId() {
-        return id;
+    public ArrayList<String> getAllFields(){
+        ArrayList<String> fields = new ArrayList<>();
+        fields.add(this.getFirstName());
+        fields.add(this.getLastName());
+        fields.add(this.getCNP());
+        fields.add(this.getDateOfBirth());
+        fields.add(this.getDateOfRegistration());
+
+        return fields;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+
 
     public String getCNP() {
         return CNP;

@@ -1,31 +1,28 @@
-import Domain.ClientValidator;
-import Domain.MovieValidator;
-import Domain.ReservationValidator;
-import Repository.ClientRepository;
-import Repository.MovieRepository;
-import Repository.ReservationRepository;
+import Domain.*;
+import Repository.IRepository;
+import Repository.InMemoryRepository;
 import Service.ClientService;
 import Service.MovieService;
 import Service.ReservationService;
-import UI.Console;
 import UI.NewConsole;
+import UI.Console;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        MovieValidator movieValidator = new MovieValidator();
-        ClientValidator clientValidator = new ClientValidator();
-        ReservationValidator reservationValidator = new ReservationValidator();
+        IValidator<Movie> movieValidator = new MovieValidator();
+        IValidator<Client> clientValidator = new ClientValidator();
+        IValidator<Reservation> reservationValidator = new ReservationValidator();
 
-        MovieRepository movieRepository = new MovieRepository(movieValidator);
-        ClientRepository clientRepository = new ClientRepository(clientValidator);
-        ReservationRepository reservationRepository = new ReservationRepository(reservationValidator);
+        IRepository<Movie> movieRepository = new InMemoryRepository<>(movieValidator);
+        IRepository<Client> clientRepository = new InMemoryRepository<>(clientValidator);
+        IRepository<Reservation> reservationRepository = new InMemoryRepository<>(reservationValidator);
 
         MovieService movieService = new MovieService(movieRepository);
         ClientService clientService = new ClientService(clientRepository);
         ReservationService reservationService = new ReservationService(movieRepository, clientRepository, reservationRepository);
-        NewConsole console = new NewConsole(movieService, clientService, reservationService);
+        Console console = new Console(movieService, clientService, reservationService);
         console.run();
     }
 }

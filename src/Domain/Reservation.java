@@ -1,12 +1,14 @@
 package Domain;
 
-public class Reservation {
-    private int id, movieId, idClient;
+import java.util.ArrayList;
+
+public class Reservation extends Entity {
+    private int movieId, idClient;
     private String date, time;
 
 
     public Reservation(int id, int movieId, int idClient, String date, String time) {
-        this.id = id;
+        super(id);
         this.movieId = movieId;
         this.idClient = idClient;
         this.date = date;
@@ -16,7 +18,7 @@ public class Reservation {
     @Override
     public String toString() {
         return "Reservation{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", movieId=" + movieId +
                 ", idClient=" + idClient +
                 ", date='" + date + '\'' +
@@ -24,12 +26,14 @@ public class Reservation {
                 '}';
     }
 
-    public int getId() {
-        return id;
-    }
+    public ArrayList<String> getAllFields(){
+        ArrayList<String> fields = new ArrayList<>();
+        fields.add(this.getDate());
+        fields.add(this.getTime());
+        fields.add(Integer.toString(this.getIdClient()));
+        fields.add(Integer.toString(this.getMovieId()));
 
-    public void setId(int id) {
-        this.id = id;
+        return fields;
     }
 
     public int getMovieId() {
