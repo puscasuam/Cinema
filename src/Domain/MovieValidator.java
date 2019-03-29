@@ -17,6 +17,8 @@ public class MovieValidator implements IValidator<Movie> {
         }
 
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        format.setLenient(false);
+
         try {
             format.parse(movie.getReleaseDate());
         } catch (ParseException pe) {

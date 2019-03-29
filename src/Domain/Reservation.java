@@ -36,6 +36,7 @@ public class Reservation extends Entity {
         return fields;
     }
 
+
     public int getMovieId() {
         return movieId;
     }

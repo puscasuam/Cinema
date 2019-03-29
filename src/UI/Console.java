@@ -1,7 +1,9 @@
 package UI;
 
+import CustomException.DataFormatException;
 import Domain.Client;
 import Domain.Movie;
+import Domain.MovieFrequenciesOnReservationViewModel;
 import Domain.Reservation;
 import Service.ClientService;
 import Service.MovieService;
@@ -31,6 +33,11 @@ public class Console {
         System.out.println("2. Client CRUD");
         System.out.println("3. Reservation CRUD");
         System.out.println("4. Search in movie/client fields");
+        System.out.println("5. Show reservations time frame report");
+        System.out.println("6. Show movie frequencies on reservations report");
+        System.out.println("7. Show client cards sorted by fidelity points");
+        System.out.println("8. Delete all reservation between two dates");
+        System.out.println("9. Increment fidelity points for clients with date of birth between two dates");
         System.out.println("x. Exit");
     }
 
@@ -50,7 +57,22 @@ public class Console {
                     runReservationCrud();
                     break;
                 case "4":
-                    runSearchFullText();
+                    handleSearchFullText();
+                    break;
+                case "5":
+                    handleReservationTimeFrame();
+                    break;
+                case "6":
+                    handleMovieFrequencies();
+                    break;
+                case "7":
+                    handleSortClientCardsByFidelityPoints();
+                    break;
+                case "8":
+                    handleDeleteReservationBetweenTwoDates();
+                    break;
+                case "9":
+                    handleIncrementationofFidelityPoints();
                     break;
                 case "x":
                     return;
@@ -60,6 +82,8 @@ public class Console {
             }
         }
     }
+
+
 
     private void runReservationCrud() {
         while (true) {
@@ -102,7 +126,7 @@ public class Console {
 
             System.out.println("Reservation removed!");
         } catch (Exception ex) {
-            System.out.println("Errors:\n" + '[' +ex.getClass()+ ']' + ex.getMessage());
+            System.out.println("Errors:\n" + '[' + ex.getClass() + ']' + ex.getMessage());
         }
     }
 
@@ -124,7 +148,7 @@ public class Console {
 
             System.out.println("Reservation added!");
         } catch (Exception ex) {
-            System.out.println("Errors:\n"+ '[' +ex.getClass()+ ']'  + ex.getMessage());
+            System.out.println("Errors:\n" + '[' + ex.getClass() + ']' + ex.getMessage());
         }
     }
 
@@ -169,7 +193,7 @@ public class Console {
 
             System.out.println("Client removed!");
         } catch (Exception ex) {
-            System.out.println("Errors:\n" + '[' +ex.getClass()+ ']' + ex.getMessage());
+            System.out.println("Errors:\n" + '[' + ex.getClass() + ']' + ex.getMessage());
         }
     }
 
@@ -194,9 +218,34 @@ public class Console {
 
             System.out.println("Client added!");
         } catch (Exception ex) {
-            System.out.println("Errors:\n" + '[' +ex.getClass()+ ']' + ex.getMessage());
+            System.out.println("Errors:\n" + '[' + ex.getClass() + ']' + ex.getMessage());
         }
     }
+
+
+    private void handleIncrementationofFidelityPoints() {
+
+        System.out.println("Enter the value of incrementation:");
+        int increment = Integer.parseInt(scanner.nextLine());
+
+        System.out.println("Enter start date (dd.mm.yyyy):");
+        String startDate = scanner.nextLine();
+
+        System.out.println("Enter end date(dd.mm.yyyy):");
+        String endDate = scanner.nextLine();
+
+        List<Client> updateFidelityPointDependingOnDateOfBirth = clientService.updateFidelityPointDependingOnDateOfBirth(increment, startDate, endDate);
+
+        if (!updateFidelityPointDependingOnDateOfBirth.isEmpty()) {
+            for (Client client : updateFidelityPointDependingOnDateOfBirth) {
+                System.out.println(client);
+            }
+        } else {
+            System.out.println("There are no clients with birthdays between selected dates!");
+        }
+
+    }
+
 
     private void runMovieCrud() {
         while (true) {
@@ -238,7 +287,7 @@ public class Console {
             movieService.remove(id);
             System.out.println("Movie removed!");
         } catch (Exception ex) {
-            System.out.println("Errors:\n" + '[' +ex.getClass()+ ']' + ex.getMessage());
+            System.out.println("Errors:\n" + '[' + ex.getClass() + ']' + ex.getMessage());
         }
     }
 
@@ -260,11 +309,11 @@ public class Console {
 
             System.out.println("Movie added!");
         } catch (Exception ex) {
-            System.out.println("Errors:\n" + '[' +ex.getClass()+ ']'  + ex.getMessage());
+            System.out.println("Errors:\n" + '[' + ex.getClass() + ']' + ex.getMessage());
         }
     }
 
-    private void runSearchFullText() {
+    private void handleSearchFullText() {
         System.out.println("Enter search words:");
         String[] words = scanner.nextLine().split("\\s");
 
@@ -299,4 +348,67 @@ public class Console {
             }
         }
     }
+
+    private void handleReservationTimeFrame() throws DataFormatException {
+        List<Integer> reservationsTimeFrame = new ArrayList<>();
+
+        System.out.println("Enter first limit of time interval(hh:mm):");
+        String startLimit = scanner.nextLine();
+
+        System.out.println("Enter second limit of time interval(hh:mm):");
+        String endLimit = scanner.nextLine();
+
+        try {
+            reservationsTimeFrame = reservationService.reservationsTimeFrameReport(startLimit, endLimit);
+        } catch (Exception ex) {
+            System.out.println("Errors:\n" + '[' + ex.getClass() + ']' + ex.getMessage());
+        }
+
+        if (!reservationsTimeFrame.isEmpty()) {
+            System.out.println();
+            System.out.println("Searching results in a given time frame: ");
+            for (Integer searchId : reservationsTimeFrame) {
+                for (Reservation reservation : reservationService.getAll()) {
+                    if (searchId == reservation.getId()) {
+                        System.out.println(reservation);
+                    }
+                }
+            }
+        } else {
+            System.out.println("There is no reservation in selected time frame");
+        }
+    }
+
+
+    private void handleMovieFrequencies() {
+        List<MovieFrequenciesOnReservationViewModel> movieFrequencies = reservationService.getMovieFrequenciesReport();
+        for (MovieFrequenciesOnReservationViewModel frequencieReport : movieFrequencies) {
+            System.out.println(String.format("%s %d", frequencieReport.getTitle(), frequencieReport.getFrequencies()));
+        }
+    }
+
+    private void handleSortClientCardsByFidelityPoints() {
+        for (Client client : clientService.sortedByFidelityPoints()) {
+            System.out.println(client);
+        }
+    }
+
+    private void handleDeleteReservationBetweenTwoDates() {
+        System.out.println("Enter start date (dd.mm.yyyy):");
+        String startDate = scanner.nextLine();
+
+        System.out.println("Enter end date(dd.mm.yyyy):");
+        String endDate = scanner.nextLine();
+
+        List<Reservation> reservationsDateInterval = reservationService.deleteReservationsBetweenTwoDates(startDate, endDate);
+
+        if (!reservationsDateInterval.isEmpty()) {
+            for (Reservation reservation : reservationsDateInterval) {
+                System.out.println(reservation);
+            }
+        } else {
+            System.out.println("There is no reservation in selected time interval!");
+        }
+    }
+
 }

@@ -4,6 +4,7 @@ import Domain.Movie;
 import Domain.MovieValidator;
 import Repository.IRepository;
 import Repository.InMemoryRepository;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ class InMemoryRepositoryTest {
     private MovieValidator movieValidator = new MovieValidator();
     private IRepository<Movie> movieIRepositoryitory = new InMemoryRepository<>(movieValidator);
 
-
+    @Test
     void findByIdWithExistingIdShouldReturnCorrectEntity() {
 
         movieIRepositoryitory.insertOrUpdate(movieTest);
@@ -24,6 +25,7 @@ class InMemoryRepositoryTest {
     /**
      * Test only for add
      */
+    @Test
     void insertOrUpdateShouldCorrectlyAddAnEntity() {
         movieIRepositoryitory.insertOrUpdate(movieTest);
         List<Movie> movies = movieIRepositoryitory.getAll();
@@ -34,6 +36,7 @@ class InMemoryRepositoryTest {
     /**
      * Test only for update
      */
+    @Test
     void insertOrUpdateShouldCorrectlyUpdateAnEntity() {
         movieIRepositoryitory.insertOrUpdate(movieTest);
         List<Movie> movies = movieIRepositoryitory.getAll();
@@ -41,9 +44,10 @@ class InMemoryRepositoryTest {
         Movie secondMovieTest = new Movie(1, "Deadpool2", "18.05.18", 25.0, false);
         movieIRepositoryitory.insertOrUpdate(secondMovieTest);
         assertEquals(1, movies.size());
-        assertEquals("Deadpoll2", movies.get(0).getTitle());
+        assertEquals("Deadpool2", movies.get(0).getTitle());
     }
 
+    @Test
     void deleteShouldCorrectlyDeleteAnEntity() {
         movieIRepositoryitory.insertOrUpdate(movieTest);
         List<Movie> movies = movieIRepositoryitory.getAll();
@@ -53,6 +57,7 @@ class InMemoryRepositoryTest {
         assertEquals(0, movies.size());
     }
 
+    @Test
     void getAllShouldCorrectlyReturnAllEntities(){
         movieIRepositoryitory.insertOrUpdate(movieTest);
         Movie secondMovieTest = new Movie(2, "Deadpool2", "18.05.18", 25.0, false);

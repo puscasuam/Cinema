@@ -13,6 +13,14 @@ public class MovieService extends IsSearchable<Movie>{
         this.repository = repository;
     }
 
+    /**
+     * add or update a movie
+      * @param id
+     * @param title
+     * @param releaseDate
+     * @param price
+     * @param onCinema
+     */
     public void addOrUpdate(Integer id, String title, String releaseDate, Double price, Boolean onCinema) {
         Movie existing = repository.findById(id);
 
@@ -36,14 +44,27 @@ public class MovieService extends IsSearchable<Movie>{
         repository.insertOrUpdate(movie);
     }
 
+    /**
+     * remove a movie by id
+     * @param id - given id
+     */
     public void remove(Integer id) {
         repository.remove(id);
     }
 
+    /**
+     *get all movies and all fields
+     * @return a list of movies with all fields
+     */
     public List<Movie> getAll() {
         return repository.getAll();
     }
 
+    /**
+     * full text search in movies list
+     * @param words -  text to search (can be one or more words)
+     * @return a list -  movie id
+     */
     public List<Integer> textSearch(String[] words) {
         return super.fullTextSearch(words, repository.getAll());
     }

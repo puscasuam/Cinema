@@ -4,6 +4,7 @@ import CustomException.DataFormatException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ClientValidator implements IValidator<Client> {
     public void validate(Client client) throws DataFormatException {
@@ -20,10 +21,13 @@ public class ClientValidator implements IValidator<Client> {
         }
 
         SimpleDateFormat format = new SimpleDateFormat("dd.mm.yyyy");
+        format.setLenient(false);
+
         try {
             format.parse(client.getDateOfBirth());
+
         } catch (ParseException pe) {
-            throw new DataFormatException("The release date is not in a correct format!");
+            throw new DataFormatException("The release date is not in a correct format or is not a valid date!");
         }
 
         try {

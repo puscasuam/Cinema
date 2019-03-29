@@ -29,7 +29,7 @@ public class Client extends Entity {
                 '}';
     }
 
-    public ArrayList<String> getAllFields(){
+    public ArrayList<String> getAllFields() {
         ArrayList<String> fields = new ArrayList<>();
         fields.add(this.getFirstName());
         fields.add(this.getLastName());
@@ -40,7 +40,9 @@ public class Client extends Entity {
         return fields;
     }
 
-
+    public String getDateField() {
+        return this.getDateOfBirth();
+    }
 
     public String getCNP() {
         return CNP;
